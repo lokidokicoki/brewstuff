@@ -7,6 +7,11 @@ def c_to_f(t):
     return (t * (9 / 5)) + 32
 
 
+def abv(og, fg):
+    result = (76.08 * (og - fg) / (1.755 - og)) * (fg / 0.794)
+    return result
+
+
 def spgr(r, tr, tc):
     a = 1.00130346
     b = 0.0001347221244
@@ -21,12 +26,30 @@ def spgr(r, tr, tc):
         / (a - (b * tc) + (c * pow(tc, 2)) - (d * pow(tc, 3)))
     )
 
-    print(cg)
     return cg
 
 
 def calculate_abv():
     print("ABV")
+    questions = [
+        {
+            "type": "input",
+            "name": "og",
+            "message": "Original gravity reading:",
+            "validate": lambda val: len(val) != 0 or "Supply a reading",
+        },
+        {
+            "type": "input",
+            "name": "fg",
+            "message": "Final gravity reading:",
+            "validate": lambda val: len(val) != 0 or "Supply a reading",
+        },
+    ]
+
+    answers = prompt(questions)
+
+    result = abv(float(answers["og"]), float(answers["fg"]))
+    print("Calculated ABV: ", result)
 
 
 def calculate_spgr():
@@ -56,8 +79,8 @@ def calculate_spgr():
 
     answers = prompt(questions)
 
-    print(answers)
-    spgr(float(answers["r"]), float(answers["tr"]), float(answers["tc"]))
+    cg = spgr(float(answers["r"]), float(answers["tr"]), float(answers["tc"]))
+    print("Corrected reading: ", cg)
 
 
 def main_menu():
